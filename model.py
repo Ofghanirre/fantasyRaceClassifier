@@ -1,6 +1,14 @@
 from shared.shared import *
 from uuid import uuid4
-def initNewModel():
+def initNewModel(modelNumber):
+    if modelNumber == 0:
+        return initNewModel0()
+    elif modelNumber == 1:
+        return initNewModel_1()
+    else:
+        raise ValueError("Model number not supported")
+
+def initNewModel0():
     # Model:
     model = keras.Sequential()
     model.add(keras.layers.Rescaling(1.0 / 255))

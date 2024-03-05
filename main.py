@@ -32,6 +32,12 @@ parser.add_argument(
     default=getSavePath()
 )
 parser.add_argument(
+    "-V", "--modelVersion",
+    help="The version of the model to use. 0 or 1.",
+    type=int,
+    default=0
+)
+parser.add_argument(
     "-p", "--modelpath",
     help="The path to load a model.",
     default=None
@@ -85,7 +91,7 @@ if __name__ == "__main__":
         print("Model loaded!")
     else:
         print("Model initialization...")
-        model, id = initNewModel()
+        model, id = initNewModel(args.modelVersion)
         print("Model initialized!")
     model.summary()
 
@@ -109,7 +115,7 @@ if __name__ == "__main__":
 
     import json
 
-    if input("Press s to save the model, then press enter to continue.") == "s":
+    if args["auto-save"] or (input("Press s to save the model, then press enter to continue.") == "s"):
         path = args.output
         weightPath = f"{WEIGHTS_PATH}/{path}.h5"
         model.save_weights(weightPath)
