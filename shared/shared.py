@@ -19,6 +19,9 @@ executeCommand(f"mkdir -p {SAVE_PATH}")
 executeCommand(f"mkdir -p {WEIGHTS_PATH}")
 
 
+from datetime import datetime
+from shared.customLayer import SquareImageLayer
+
 def getSavePath():
     return datetime.now().strftime("save_model_%H-%M-%S")
 
@@ -29,7 +32,6 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-
 os.environ["KERAS_BACKEND"] = "torch"
 import keras
 
@@ -51,6 +53,7 @@ data_augmentation_layers = [
     keras.layers.RandomContrast(0.1),
     keras.layers.RandomBrightness(0.1),
 #    keras.layers.Lambda(lambda x: tf.image.rgb_to_grayscale(x))
+    SquareImageLayer()
 ]
 
 def data_augmentation(images):
@@ -107,3 +110,10 @@ def getDataSetSize(dataset):
     for images, _ in dataset:
         cnt += len(images)
     return cnt
+
+def getDetailledDataSetSize(dataset):
+    cnt = [0 for _ in TARGET_DT_LABELS]
+    for _, labels in dataset:
+        for label in labels:
+            cnt[int(label)] += 1
+    return {TARGET_DT_LABELS[i]: cnt[i] for i in range(len(TARGET_DT_LABELS))}
