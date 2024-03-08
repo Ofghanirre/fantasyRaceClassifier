@@ -5,6 +5,8 @@ def initNewModel(modelNumber):
         return initNewModel0()
     elif modelNumber == 1:
         return initNewModel_1()
+    elif modelNumber == 2:
+        return initNewModel_2()
     else:
         raise ValueError("Model number not supported")
 
@@ -49,12 +51,32 @@ def initNewModel_1():
     model.add(keras.layers.Dense(128, activation="relu"))
     model.add(keras.layers.Dense(4, activation="relu")) # 4 => Amount of possible class
 
-    model.summary()
-
     model.compile(optimizer='adam',
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
         metrics=['accuracy'])
     return model, uuid4()
+
+from keras.applications import MobileNetV2
+
+def initNewModel_2():
+    base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(64, 64, 3))
+    # Geler toutes les couches du modèle pré-entraîné
+    for layer in base_model.layers:
+        layer.trainable = True
+    # Ajouter des couches personnalisées au dessus du modèle de base
+    x = base_model.output
+    x = keras.layers.GlobalAveragePooling2D()(x)
+    x = keras.layers.Dense(1024, activation='relu')(x)  # Couche fully connected
+    predictions = keras.layers.Dense(4, activation='softmax')(x)  # Couche de sortie avec 4 classes
+
+    # Créer le modèle final
+    model = keras.Model(inputs=base_model.input, outputs=predictions)
+
+    model.compile(optimizer='adam',
+        loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+        metrics=['accuracy'])
+    return model, uuid4()
+
 
 import json
 

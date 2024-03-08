@@ -1,5 +1,5 @@
 from shared.shared import *
-from model import *
+from shared.model import *
 from argparse import ArgumentParser
 from random import randint
 
@@ -33,7 +33,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "-V", "--modelVersion",
-    help="The version of the model to use. 0 or 1.",
+    help="The version of the model to use. 0 or 1 or 2.",
     type=int,
     default=0
 )
@@ -75,11 +75,11 @@ if __name__ == "__main__":
     print("Data augmentation starting...")
     augmented_train = data_augmentations(raw_train, args.augmentation)
     augmented_valid = data_augmentations(raw_valid, args.augmentation)
-#    print(f"""Done!
-#    New Sizes:
-#    - Train: {getDataSetSize(augmented_train)}
-#    - Valid: {getDataSetSize(augmented_valid)}
-#    """)
+    print(f"""Done!
+    New Sizes:
+    - Train: {getDetailledDataSetSize(augmented_train)}
+    - Valid: {getDetailledDataSetSize(augmented_valid)}
+    """)
 
 
     # ----------------------------------------
@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
     import json
 
-    if args["auto-save"] or (input("Press s to save the model, then press enter to continue.") == "s"):
+    if args.auto_save or (input("Press s to save the model, then press enter to continue.") == "s"):
         path = args.output
         weightPath = f"{WEIGHTS_PATH}/{path}.h5"
         model.save_weights(weightPath)
@@ -135,3 +135,5 @@ if __name__ == "__main__":
         }, indent=4, separators=(',', ':'))
         with open(f"{SAVE_PATH}/{path}.json", "w") as output_file:
             output_file.write(str(result))
+
+
