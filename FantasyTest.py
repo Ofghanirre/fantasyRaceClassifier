@@ -62,7 +62,7 @@ def predict_and_visualize(data_set, model, num_images=9):
             next_flag = False
 
 parser = ArgumentParser(
-    prog="Test.py",
+    prog="FantasyTest.py",
     description="Test the model with an image and visualize the predictions",
     epilog="Made by Antonin JEAN for University Gustave Eiffel | IGM | M2 SIS | 2023-2024"
 )
@@ -74,8 +74,8 @@ parser.add_argument(
 )
 parser.add_argument(
     "-p", "--imagepath",
-    help="The path to the image to test.",
-    default=None
+    help="The path to the folder images to test.",
+    default= TARGET_DT
 )
 parser.add_argument(
     "-i", "--imageSize",
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # ----------------------------------------
     raw_train, raw_valid = keras.utils.image_dataset_from_directory(
-                                                    directory = TARGET_DT,
+                                                    directory = args.imagepath,
                                                     batch_size=BATCH_SIZE,
                                                     image_size=(args.imageSize, args.imageSize),
                                                     validation_split=0.2,
