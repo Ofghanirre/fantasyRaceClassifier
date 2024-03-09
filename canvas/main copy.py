@@ -29,11 +29,11 @@ print("Keras version:",keras.__version__)
 DATA_AUGMENTATION_CYCLE = 8
 EPOCH_NUMBER = 10
 BATCH_SIZE = 64
-
+IMAGE_SIZE = 64
 raw_train, raw_valid = keras.utils.image_dataset_from_directory(
                                                 directory = TARGET_DT,
                                                 batch_size=BATCH_SIZE,
-                                                image_size=(64, 64),
+                                                image_size=(IMAGE_SIZE, IMAGE_SIZE),
                                                 validation_split=0.2,
                                                 subset='both',
                                                 seed = 14)
@@ -101,7 +101,7 @@ model.add(keras.layers.Flatten())
 model.add(keras.layers.Dense(128, activation="relu"))
 model.add(keras.layers.Dropout(0.2))
 model.add(keras.layers.Dense(4, activation="softmax")) # Classification
-model.build(input_shape=(None, 64, 64, 3))
+model.build(input_shape=(None, IMAGE_SIZE, IMAGE_SIZE, 3))
 
 model.compile(optimizer='adam',
     loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False), # Softmax utilisé, donc from_logits=False
