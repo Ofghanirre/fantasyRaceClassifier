@@ -1,7 +1,8 @@
 from shared.shared import *
 from shared.model import *
-from argparse import ArgumentParser
 from random import randint
+from argparse import ArgumentParser
+
 
 parser = ArgumentParser(
     prog="FantasyClass.py",
@@ -53,8 +54,27 @@ parser.add_argument(
     help="A comment to add to the model.",
     default=None
 )
+parser.add_argument(
+    "-g", "--showGraph",
+    help="Show the graph of the evaluation.",
+    action="store_true",
+    default=False
+)
+parser.add_argument(
+    "--hideAugResult",
+    help="Hide the result of the augmentation.",
+    action="store_true",
+    default=False
+)
+parser.add_argument(
+    "-i", "--imageSize",
+    help="Define the input size (considered squared)",
+    type=int,
+    default=IMAGE_SIZE
+)
 if __name__ == "__main__":
     args = parser.parse_args()
+    
     # ----------------------------------------
     # Data Loading :
     # ----------------------------------------
@@ -62,7 +82,7 @@ if __name__ == "__main__":
     raw_train, raw_valid = keras.utils.image_dataset_from_directory(
                                                     directory = TARGET_DT,
                                                     batch_size=BATCH_SIZE,
-                                                    image_size=(64, 64),
+                                                    image_size=(args.imageSize, args.imageSize),
                                                     validation_split=0.2,
                                                     subset='both',
                                                     seed=randint(0, 1000)
@@ -75,12 +95,12 @@ if __name__ == "__main__":
     print("Data augmentation starting...")
     augmented_train = data_augmentations(raw_train, args.augmentation)
     augmented_valid = data_augmentations(raw_valid, args.augmentation)
-    print(f"""Done!
-    New Sizes:
-    - Train: {getDetailledDataSetSize(augmented_train)}
-    - Valid: {getDetailledDataSetSize(augmented_valid)}
-    """)
-
+    if (not args.hideAugResult):
+        print(f"""Done!
+        New Sizes:
+        - Train: {getDetailledDataSetSize(augmented_train)}
+        - Valid: {getDetailledDataSetSize(augmented_valid)}
+        """)
 
     # ----------------------------------------
     # Model Training
@@ -91,7 +111,7 @@ if __name__ == "__main__":
         print("Model loaded!")
     else:
         print("Model initialization...")
-        model, id = initNewModel(args.modelVersion)
+        model, id = initNewModel(args.modelVersion, args.imageSize)
         print("Model initialized!")
     model.summary()
 
@@ -109,14 +129,14 @@ if __name__ == "__main__":
 
 
     print("Train evaluation:")
-    evaluation_train = evaluate(model, augmented_train)
+    evaluation_train = evaluate_model(model, augmented_train, args.showGraph)
     print("Valid evaluation:")
-    evaluation_valid = evaluate(model, augmented_valid)
+    evaluation_valid = evaluate_model(model, augmented_valid, args.showGraph)
 
     import json
 
     if args.auto_save or (input("Press s to save the model, then press enter to continue.") == "s"):
-        path = args.output
+        path = f"{args.output}__{id}"
         weightPath = f"{WEIGHTS_PATH}/{path}.h5"
         model.save_weights(weightPath)
 
@@ -125,8 +145,8 @@ if __name__ == "__main__":
             "comment": args.comment,
             "dataset": TARGET_DT,
             "labels": TARGET_DT_LABELS,
-            "valid_score": {"lost": evaluation_valid[0], "accuracy": evaluation_valid[1]},
-            "train_score": {"lost": evaluation_train[0], "accuracy": evaluation_train[1]},
+            "valid_score": {"error_rate": evaluation_valid[0], "categorical": evaluation_valid[1]},
+            "train_score": {"error_rate": evaluation_train[0], "categorical": evaluation_train[1]},
             "epoch_number": args.epochs,
             "augmentation_cycle": args.augmentation,
             "augmentation_layers": [layer.get_config() for layer in data_augmentation_layers],

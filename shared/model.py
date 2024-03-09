@@ -1,16 +1,16 @@
 from shared.shared import *
 from uuid import uuid4
-def initNewModel(modelNumber):
+def initNewModel(modelNumber, imageSize=IMAGE_SIZE):
     if modelNumber == 0:
-        return initNewModel0()
+        return initNewModel0(imageSize)
     elif modelNumber == 1:
-        return initNewModel_1()
+        return initNewModel_1(imageSize)
     elif modelNumber == 2:
-        return initNewModel_2()
+        return initNewModel_2(imageSize)
     else:
         raise ValueError("Model number not supported")
 
-def initNewModel0():
+def initNewModel0(imageSize):
     # Model:
     model = keras.Sequential()
     model.add(keras.layers.Rescaling(1.0 / 255))
@@ -34,7 +34,7 @@ def initNewModel0():
     model.add(keras.layers.Dense(128, activation="relu"))
     model.add(keras.layers.Dropout(0.2))
     model.add(keras.layers.Dense(4, activation="softmax")) # Classification
-    model.build(input_shape=(None, 64, 64, 3))
+    model.build(input_shape=(None, imageSize, imageSize, 3))
 
     model.compile(optimizer='adam',
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False), # Softmax utilisé, donc from_logits=False
@@ -42,9 +42,9 @@ def initNewModel0():
 
     return model, uuid4()
 
-def initNewModel_1():
+def initNewModel_1(imageSize):
     model = keras.Sequential()
-    model.add(keras.Input(shape=(64,64,3)))
+    model.add(keras.Input(shape=(imageSize,imageSize,3)))
     model.add(keras.layers.Rescaling(1.0 / 255))     ## couche supplémentaire pour l'étalonnage
     model.add(keras.layers.Conv2D(filters=512, kernel_size=4, padding='same', activation='relu'))
     model.add(keras.layers.Flatten())
@@ -58,8 +58,8 @@ def initNewModel_1():
 
 from keras.applications import MobileNetV2
 
-def initNewModel_2():
-    base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(64, 64, 3))
+def initNewModel_2(imageSize):
+    base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(imageSize, imageSize, 3))
     # Geler toutes les couches du modèle pré-entraîné
     for layer in base_model.layers:
         layer.trainable = True

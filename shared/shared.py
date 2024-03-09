@@ -34,12 +34,13 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 os.environ["KERAS_BACKEND"] = "torch"
 import keras
+import pandas as pd
 
 print("Keras version:",keras.__version__)
 
 EPOCH_NUMBER = 10
 BATCH_SIZE = 64
-
+IMAGE_SIZE = 64
 # ----------------------------------------
 # Data Augmentation:
 # ----------------------------------------
@@ -104,6 +105,42 @@ def evaluate(model, dataset):
     print(class_report)
     return evaluation_dataset
 
+# ----------------------------------------
+def evaluate_model(model, validation_data, show_graph=False):
+    # Obtenir les prédictions et les étiquettes réelles du jeu de validation
+    predictions = model.predict(validation_data)
+    y_true = np.concatenate([y for x, y in validation_data], axis=0)
+    y_pred = np.argmax(predictions, axis=1)
+
+    # Calculer la matrice de confusion
+    cm = confusion_matrix(y_true, y_pred)
+
+    # Calculer le taux d'erreur global
+    error_rate = np.mean(y_pred != y_true)
+
+    # Calculer le taux d'erreur par catégorie
+    error_rates_per_category = 1 - np.diag(cm) / np.sum(cm, axis=1)
+
+    # Afficher le taux d'erreur global
+    print("Taux d'erreur global :", error_rate)
+    if show_graph:
+        # Créer un graphique représentant le taux d'erreur par catégorie
+        plt.figure(figsize=(10, 6))
+        plt.bar(range(len(error_rates_per_category)), error_rates_per_category)
+        plt.xlabel('Catégorie')
+        plt.ylabel('Taux d\'erreur')
+        plt.title('Taux d\'erreur par catégorie')
+        plt.xticks(range(len(TARGET_DT_LABELS)), TARGET_DT_LABELS)  # Ajouter des étiquettes d'axe
+        plt.show()
+
+    # Afficher les statistiques sur le taux d'erreur par catégorie sous forme de tableau
+    categories = TARGET_DT_LABELS
+    df_error_rates = pd.DataFrame({'Catégorie': categories, 'Taux d\'erreur': error_rates_per_category})
+    print(df_error_rates)
+
+    # Afficher le rapport de classification
+    print(classification_report(y_true, y_pred, target_names=categories))
+    return error_rate, {TARGET_DT_LABELS[i]: error_rates_per_category[i] for i in range(len(TARGET_DT_LABELS))}
 
 def getDataSetSize(dataset):
     cnt = 0
