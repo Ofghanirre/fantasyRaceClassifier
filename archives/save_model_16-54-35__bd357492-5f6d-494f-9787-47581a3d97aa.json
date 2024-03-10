@@ -8738,5 +8738,5 @@
         "keras_version":"2.15.0",
         "backend":"tensorflow"
     },
-    "weights":"saves/2024-03-10/weights/save_model_16-54-35__bd357492-5f6d-494f-9787-47581a3d97aa.h5"
+    "weights":"archives/weights/save_model_16-54-35__bd357492-5f6d-494f-9787-47581a3d97aa.h5"
 }
