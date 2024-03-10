@@ -21,7 +21,8 @@ The structure is the following:
 - `shared/model` : contains the model functions and api
 - `shared/customLayer` : contains codes for custom layers implemented in the project
 - `saves` : contains the saved models and weights (not included in the repository)
-
+- `saves/weights` : contains the weight h2 files related to its saves json files
+- `archives`: contains the saves considered as potentially good for examination
 
 ## Usage
 ### Train a model
@@ -64,6 +65,11 @@ Made by Antonin JEAN for University Gustave Eiffel | IGM | M2 SIS | 2023-2024
 ### Test a model
 To test a model, you can use the `FantasyTest.py` file. The usage is the following:
 ```bash
+python FantasyClass.py --h
+```
+
+The current help state is the following:
+```bash
 usage: FantasyTest.py [-h] -m MODELPATH [-p IMAGEPATH] [-i IMAGESIZE]
 
 Test the model with an image and visualize the predictions
@@ -83,3 +89,5 @@ Made by Antonin JEAN for University Gustave Eiffel | IGM | M2 SIS | 2023-2024
 # Dataset
 
 The current DataSet can be found at [this location](https://drive.google.com/file/d/1ZuHrD7byW1HZlx7JtmTXWsDkz0Ksgi2E/view?usp=sharing) as a zip file
+
+This project has been made for University Gustave Eiffel | IGM | M2 SIS | 2023-2024
