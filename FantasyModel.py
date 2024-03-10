@@ -133,6 +133,9 @@ if __name__ == "__main__":
     print("Valid evaluation:")
     evaluation_valid = evaluate_model(model, augmented_valid, args.showGraph)
 
+    from FantasyTest import predict_and_visualize
+    predict_and_visualize(augmented_valid, model)
+
     import json
 
     if args.auto_save or (input("Press s to save the model, then press enter to continue.") == "s"):
