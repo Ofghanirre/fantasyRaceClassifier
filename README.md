@@ -1,5 +1,6 @@
 Fantasy Race Classifier
 ---
+![image](https://github.com/Ofghanirre/fantasyRaceClassifier/assets/18609818/af2bc897-8c6a-4ba2-9ec5-f447bb91c27d)
 
 This project is a python project that uses a neural network to classify images of fantasy characters into their
 respective races along the followings:
@@ -9,9 +10,6 @@ respective races along the followings:
 - Orc
 
 The project is based on the Keras library and uses a convolutional neural network to classify the images.
-
-The dataset used for this project is a created one based of google images search and midjourneys generations.
-
 
 The structure is the following:
 - `dataset/fantasyRace` : contains the dataset, with folders : `elf`, `dwarf`, `human`, `orc` (not included in the repository)
@@ -89,5 +87,7 @@ Made by Antonin JEAN for University Gustave Eiffel | IGM | M2 SIS | 2023-2024
 # Dataset
 
 The current DataSet can be found at [this location](https://drive.google.com/file/d/1ZuHrD7byW1HZlx7JtmTXWsDkz0Ksgi2E/view?usp=sharing) as a zip file
+
+*The Dataset consist of 66% midJourney generated images, and 33% google images's based queries*
 
 This project has been made for University Gustave Eiffel | IGM | M2 SIS | 2023-2024
