@@ -23,14 +23,14 @@ def predict_and_visualize(data_set, model, num_images=9):
         nonlocal exit_flag
         exit_flag = True
         plt.close()
-
+    prob_model = keras.Sequential([model, keras.layers.Softmax()])
     while(not exit_flag):
         if (new_take):
             for images, labels in data_set.take(take_iter):  # Prendre un seul lot d'images
                 batch_images = images.numpy() / 255.0
                 batch_labels = labels.numpy()
             # Faire des prédictions sur les images du lot
-            predictions = model.predict(batch_images)
+            predictions = prob_model.predict(batch_images)
             
             new_take = False
             
@@ -48,13 +48,12 @@ def predict_and_visualize(data_set, model, num_images=9):
             plt.axis('off')
             predicted_class = np.argmax(predictions[i])
             true_class = batch_labels[i]
-            print(predictions[i])
+            # print(predictions[i])
             plt.title(f'Predicted: {TARGET_DT_LABELS[predicted_class]}, True: {TARGET_DT_LABELS[true_class]}', color='green' if predicted_class == true_class else 'red')
         plt.tight_layout()
         plt.show()
         if (next_flag):
             image_iter += num_images
-            print(image_iter, len(batch_images))
             if (image_iter >= len(batch_images)):
                 image_iter = 0
                 take_iter += 1
