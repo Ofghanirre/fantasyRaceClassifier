@@ -46,7 +46,7 @@ def initNewModel_1(imageSize):
     model = keras.Sequential()
     model.add(keras.Input(shape=(imageSize,imageSize,3)))
     model.add(keras.layers.Rescaling(1.0 / 255))     ## couche supplémentaire pour l'étalonnage
-    model.add(keras.layers.Conv2D(filters=512, kernel_size=4, padding='same', activation='relu'))
+    model.add(keras.layers.Conv2D(filters=128, kernel_size=4, padding='same', activation='relu'))
     model.add(keras.layers.Flatten())
     model.add(keras.layers.Dense(128, activation="relu"))
     model.add(keras.layers.Dense(4, activation="relu")) # 4 => Amount of possible class
