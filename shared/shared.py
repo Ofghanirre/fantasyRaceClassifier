@@ -48,9 +48,9 @@ DATA_AUGMENTATION_CYCLE = 8
 
 data_augmentation_layers = [
     keras.layers.RandomFlip("horizontal"),
-    keras.layers.RandomRotation(0.1),
-    keras.layers.RandomZoom(0.1),
-    keras.layers.RandomTranslation(0.1, 0.1),
+    keras.layers.RandomRotation(0.01),
+    keras.layers.RandomZoom(0.05),
+    keras.layers.RandomTranslation(0.05, 0.05),
     keras.layers.RandomContrast(0.1),
     keras.layers.RandomBrightness(0.1),
 #    keras.layers.Lambda(lambda x: tf.image.rgb_to_grayscale(x))
